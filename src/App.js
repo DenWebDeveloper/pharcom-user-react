@@ -1,28 +1,22 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
+import  store,{history} from './redux'
+import Routes from './routes'
+
+import 'typeface-roboto'
+import './App.css'
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <Routes/>
+                </ConnectedRouter>
+            </Provider>
+        )
+    }
 }
 
-export default App;
+export default App
