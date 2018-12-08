@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import validator from 'validator'
 import Cookies from 'js-cookie'
-
 import Grid from '@material-ui/core/Grid'
 import {TextField, Button} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -9,6 +8,8 @@ import {withStyles} from '@material-ui/core/styles'
 import Snackbars from '../components/Snackbars'
 
 import http from '../http'
+import { withRouter, Redirect } from "react-router-dom";
+
 
 const styles = theme => ({
     root: {
@@ -28,8 +29,12 @@ const styles = theme => ({
 
 class SingIn extends Component {
     state = {
-        email: 'user@user.com',
-        password: 'zxcasd',
+        email: 'email@email.com',
+        password: 'password',
+        redirect: {
+            state: false,
+            path: ''
+        },
         errors: {
             email: !false,
             password: !false
@@ -47,6 +52,15 @@ class SingIn extends Component {
         })
     }
 
+    redirect = (path) => {
+        this.setState({
+            redirect: {
+                state: true,
+                path
+            }
+        })
+    }
+
     handleSubmit = () => {
         const {state} = this
         const errors = {
@@ -58,7 +72,7 @@ class SingIn extends Component {
         })
         if (Object.values(errors).includes(false)) return
 
-        http.post(`/login`,{
+        http.post(`/auth/singin`,{
             email: state.email,
             password: state.password
         }).then(res => {
@@ -91,6 +105,7 @@ class SingIn extends Component {
         const {errors} = state
         return (
             <div>
+                {state.redirect.state && <Redirect to={state.redirect.path}/>}
                 <Grid container className={classes.root}>
                     <Grid className={classes.col} item container xs={6}>
                         <Grid container>
@@ -114,7 +129,7 @@ class SingIn extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Button className={classes.button}>Немає ще акаунта? Створити</Button>
+                                <Button onClick={()=> this.redirect('/auth/singup')} className={classes.button}>Немає ще акаунта? Створити</Button>
                             </Grid>
                             <Grid item xs={12}>
                                 <Button onClick={this.handleSubmit} variant='contained' color='primary'

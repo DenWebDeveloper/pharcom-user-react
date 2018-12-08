@@ -1,58 +1,17 @@
 /* eslint-disable react/prop-types, react/jsx-handler-names */
-
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import Select from 'react-select'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import NoSsr from '@material-ui/core/NoSsr'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import Chip from '@material-ui/core/Chip'
 import MenuItem from '@material-ui/core/MenuItem'
 import CancelIcon from '@material-ui/icons/Cancel'
 import {emphasize} from '@material-ui/core/styles/colorManipulator'
-
-const suggestions = [
-    {label: 'Afghanistan'},
-    {label: 'Aland Islands'},
-    {label: 'Albania'},
-    {label: 'Algeria'},
-    {label: 'American Samoa'},
-    {label: 'Andorra'},
-    {label: 'Angola'},
-    {label: 'Anguilla'},
-    {label: 'Antarctica'},
-    {label: 'Antigua and Barbuda'},
-    {label: 'Argentina'},
-    {label: 'Armenia'},
-    {label: 'Aruba'},
-    {label: 'Australia'},
-    {label: 'Austria'},
-    {label: 'Azerbaijan'},
-    {label: 'Bahamas'},
-    {label: 'Bahrain'},
-    {label: 'Bangladesh'},
-    {label: 'Barbados'},
-    {label: 'Belarus'},
-    {label: 'Belgium'},
-    {label: 'Belize'},
-    {label: 'Benin'},
-    {label: 'Bermuda'},
-    {label: 'Bhutan'},
-    {label: 'Bolivia, Plurinational State of'},
-    {label: 'Bonaire, Sint Eustatius and Saba'},
-    {label: 'Bosnia and Herzegovina'},
-    {label: 'Botswana'},
-    {label: 'Bouvet Island'},
-    {label: 'Brazil'},
-    {label: 'British Indian Ocean Territory'},
-    {label: 'Brunei Darussalam'},
-].map(suggestion => ({
-    value: suggestion.label,
-    label: suggestion.label,
-}))
+import {emitter, allOffEmitter} from '../../untils'
 
 const styles = theme => ({
     root: {
@@ -62,6 +21,7 @@ const styles = theme => ({
     input: {
         display: 'flex',
         padding: 0,
+        marginTop: 30
     },
     valueContainer: {
         display: 'flex',
@@ -213,12 +173,29 @@ class LocationSelects extends React.Component {
     state = {
         single: null,
         multi: null,
+        options: []
     }
 
-    handleChange = name => value => {
-        this.setState({
-            [name]: value,
+    handleChange = value => {
+        this.props.handleFunc(value)
+    }
+
+    requestFunc() {
+        this.props.requestFunc().then(res => {
+            const regions = res.data.map(item => ({value: item.id, label: item.name}))
+            this.setState({
+                options: regions
+            })
         })
+    }
+
+    componentDidMount() {
+        if (this.props.immediately) this.requestFunc()
+        emitter.on(this.props.nameEmitter, () => this.requestFunc())
+    }
+
+    componentWillUnmount() {
+        allOffEmitter(emitter, this.props.nameEmitter)
     }
 
     render() {
@@ -238,11 +215,12 @@ class LocationSelects extends React.Component {
             <Select
                 classes={classes}
                 styles={selectStyles}
-                options={suggestions}
+                options={this.state.options}
                 components={components}
-                value={this.state.single}
-                onChange={this.handleChange('single')}
-                placeholder="Виберіть регіон"
+                value={this.props.selected}
+                onChange={this.handleChange}
+                error={true}
+                placeholder={this.props.placeholder}
             />
         )
     }
@@ -251,6 +229,12 @@ class LocationSelects extends React.Component {
 LocationSelects.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
+    requestFunc: PropTypes.func.isRequired,
+    handleFunc: PropTypes.func.isRequired,
+    nameEmitter: PropTypes.string,
+    immediately: PropTypes.bool,
+    placeholder: PropTypes.string.isRequired,
+    selected: PropTypes.any //TODO change type
 }
 
 export default withStyles(styles, {withTheme: true})(LocationSelects)

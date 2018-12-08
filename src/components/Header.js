@@ -6,7 +6,9 @@ import {withStyles} from '@material-ui/core'
 
 
 const styles = theme => ({
-
+    root: {
+        marginBottom: 20
+    },
     typography: {
         lineHeight: 1,
         color: '#fff'
@@ -24,7 +26,7 @@ class Header extends Component {
     render() {
         const {classes} = this.props
         return (
-            <div>
+            <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
                         <div className={classes.logo}>

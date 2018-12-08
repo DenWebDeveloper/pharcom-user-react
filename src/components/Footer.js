@@ -8,7 +8,8 @@ import {withStyles} from '@material-ui/core'
 const styles = theme => ({
     root: {
         backgroundColor: '#2c387e',
-        padding:'10px'
+        padding: 10,
+        marginTop: 20
     },
     typography: {
         lineHeight: 1,
@@ -35,7 +36,7 @@ class Footer extends Component {
                     <Typography className={classes.typography} variant="body1">Підтримка</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography  className={classes.typography} variant="body1">Підтримка</Typography>
+                    <Typography className={classes.typography} variant="body1">Підтримка</Typography>
                 </Grid>
             </Grid>
 

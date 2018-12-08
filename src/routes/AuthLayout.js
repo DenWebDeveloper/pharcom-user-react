@@ -1,4 +1,4 @@
-import React,{Fragment} from 'react'
+import React, {Fragment, useEffect} from 'react'
 import {Route, Switch} from 'react-router'
 import {withStyles} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
@@ -19,6 +19,7 @@ const styles = theme => ({
 })
 
 function AuthLayout({match,classes}) {
+
     return (
         <Grid container className={classes.root}
             direction="column"

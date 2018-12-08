@@ -1,16 +1,19 @@
 import {applyMiddleware, compose, createStore} from 'redux'
-import {createHashHistory} from 'history'
-import {routerMiddleware} from 'connected-react-router'
-import rootReducer from './reducers'
-
-export const history = createHashHistory()
+import {routerMiddleware} from 'react-router-redux'
+import reducer from './reducer'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
+import history from '../history'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
 const store = createStore(
-    rootReducer(history),
+    reducer,
     composeEnhancer(
         applyMiddleware(
+            thunk,
             routerMiddleware(history),
+            logger
         ),
     ),
 )

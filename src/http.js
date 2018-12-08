@@ -1,14 +1,15 @@
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
+import {toastCustom} from './untils'
+
 const instance = axios.create({
     baseURL: 'http://localhost:1111/',
-    timeout: 5000,
+    timeout: 4000,
+    withCredentials: true
 })
 
 instance.interceptors.request.use(config => {
-    const token = Cookies.get('token')
-    if (token) config.headers.Authorization = token
     return config
 }, err => {
     // Do something with request error
@@ -23,6 +24,7 @@ instance.interceptors.response.use(response => {
         Cookies.remove('token')
         //history.push('/login')
     }
+    toastCustom(err.message,'error')
     return Promise.reject(err)
 })
 

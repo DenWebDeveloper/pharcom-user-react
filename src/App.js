@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
-import  store,{history} from './redux'
+import { Router} from 'react-router'
+import  store from './redux'
+import history from './history'
 import Routes from './routes'
 
 import 'typeface-roboto'
 import './App.css'
 
 class App extends Component {
+
     render() {
         return (
             <Provider store={store}>
-                <ConnectedRouter history={history}>
+                <Router history={history}>
                     <Routes/>
-                </ConnectedRouter>
+                </Router>
             </Provider>
         )
     }
